@@ -121,6 +121,7 @@ void UpdateDrawFrame(void)
     if (IsKeyPressed(KEY_ONE)) screenScale = 1;
     else if (IsKeyPressed(KEY_TWO)) screenScale = 2;
     else if (IsKeyPressed(KEY_THREE)) screenScale = 3;
+    else if (IsKeyPressed(KEY_FOUR)) screenScale = 4;
     
     if (screenScale != prevScreenScale)
     {
