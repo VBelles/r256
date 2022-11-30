@@ -72,20 +72,20 @@ jobs:
         dir ${{ env.PROJECT_RELEASE_PATH }}
         7z a -tzip -r .\${{ env.PROJECT_RELEASE_PATH }}.zip .\${{ env.PROJECT_RELEASE_PATH }}\*
       shell: cmd
-  
+
+    - name: Upload Artifacts to Githug Pages
+      uses: actions/upload-artifact@v3
+      with:
+        name: github-pages
+        path: ${{ env.PROJECT_RELEASE_PATH }}
+
     # Issue: Double zip: https://github.com/actions/upload-artifact/issues/39
     - name: Upload Artifacts
       uses: actions/upload-artifact@v3
       with:
         name: ${{ env.PROJECT_RELEASE_PATH }}.zip
         path: ./${{ env.PROJECT_RELEASE_PATH }}.zip
-        
-    - name: Upload Artifacts to Githug Pages
-      uses: actions/upload-artifact@v3
-      with:
-        name: github-pages
-        path: ./${{ env.PROJECT_RELEASE_PATH }}.zip
-        
+
     # Alternative: https://github.com/marketplace/actions/gh-release
     - name: Upload Artifact to Release
       uses: actions/upload-release-asset@v1.0.1
