@@ -55,13 +55,15 @@ jobs:
         copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.wasm ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.wasm
         copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.js ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.js
         copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.html ${{ env.PROJECT_RELEASE_PATH }}\index.html
+        copy /Y ${{ env.PROJECT_BUILD_PATH }}\minshell.html ${{ env.PROJECT_RELEASE_PATH }}\index2.html
+        copy /Y ${{ env.PROJECT_BUILD_PATH }}\index.html ${{ env.PROJECT_RELEASE_PATH }}\index3.html
       shell: cmd
 
     - name: Upload Artifacts to Githug Pages
       uses: actions/upload-artifact@v3
       with:
         name: github-pages
-        path: ${{ env.PROJECT_BUILD_PATH }}
+        path: ${{ env.PROJECT_RELEASE_PATH }}
         
     - name: Deploy to githug pages
       uses: peaceiris/actions-gh-pages@v3
