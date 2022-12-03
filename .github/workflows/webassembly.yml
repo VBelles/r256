@@ -60,7 +60,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: github-pages
-        path: ${{ env.PROJECT_BUILD_PATH }}
+        path: ${{ env.PROJECT_RELEASE_PATH }}
         
     - name: Deploy to githug pages
       uses: peaceiris/actions-gh-pages@v3
