@@ -55,7 +55,6 @@ jobs:
         copy /Y ${{ env.PROJECT_BUILD_PATH }}/${{ env.PROJECT_NAME }}.wasm ${{ env.PROJECT_RELEASE_PATH }}/${{ env.PROJECT_NAME }}.wasm
         copy /Y ${{ env.PROJECT_BUILD_PATH }}/${{ env.PROJECT_NAME }}.js ${{ env.PROJECT_RELEASE_PATH }}/${{ env.PROJECT_NAME }}.js
         copy /Y ${{ env.PROJECT_BUILD_PATH }}/minshell.html ${{ env.PROJECT_RELEASE_PATH }}/index.html
-        dir ${{ env.PROJECT_RELEASE_PATH }}
       shell: cmd
 
     - name: Upload Artifacts to Githug Pages
