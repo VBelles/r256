@@ -15,10 +15,10 @@ jobs:
     
     env:
       PROJECT_NAME: ${{ github.event.repository.name }}
-      PROJECT_BUILD_PATH: ${{ github.event.repository.name }}\\src
+      PROJECT_BUILD_PATH: ${{ github.event.repository.name }}/build
       PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_wasm
-      PROJECT_SOURCES: raylib_game.c
-      BUILD_WEB_SHELL: minshell.html
+      PROJECT_SOURCES: ${{ github.event.repository.name }}/src
+      BUILD_WEB_SHELL: ${{ github.event.repository.name }}/src/minshell.html
       
     steps:
     - name: Checkout this repo
@@ -49,16 +49,13 @@ jobs:
         mkdir ${{ env.PROJECT_RELEASE_PATH }}
         dir
    
-    - name: Build raylib Library
-      run: |
-        cd raylib/src
-        emcc -v
-        make PLATFORM=PLATFORM_WEB RAYLIB_BUILD_MODE=RELEASE RAYLIB_LIBTYPE=STATIC EMSDK_PATH="D:/a/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}/emsdk-cache/emsdk-main" RAYLIB_PROJECT_RELEASE_PATH=. -B
-
     - name: Build Product
       run: |
-        cd ${{ env.PROJECT_NAME }}/src
-        make PLATFORM=PLATFORM_WEB BUILD_MODE=RELEASE EMSDK_PATH="D:/a/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}/emsdk-cache/emsdk-main" PROJECT_SOURCE_FILES=${{ env.PROJECT_SOURCES }} PROJECT_BUILD_PATH=. RAYLIB_PATH=../../raylib -B
+        cd ${{ env.PROJECT_NAME }}
+        mkdir build
+        cd build
+        emcmake cmake .. -DPLATFORM=Web -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS="-s USE_GLFW=3" -DCMAKE_EXECUTABLE_SUFFIX=".html"
+        emmake make
   
     - name: Generate Artifacts
       run: |
@@ -70,7 +67,6 @@ jobs:
         copy /Y ${{ env.PROJECT_NAME }}\README.md ${{ env.PROJECT_RELEASE_PATH }}\README.md
         copy /Y ${{ env.PROJECT_NAME }}\LICENSE ${{ env.PROJECT_RELEASE_PATH }}\LICENSE
         dir ${{ env.PROJECT_RELEASE_PATH }}
-        7z a -tzip -r .\${{ env.PROJECT_RELEASE_PATH }}.zip .\${{ env.PROJECT_RELEASE_PATH }}\*
       shell: cmd
 
     - name: Upload Artifacts to Githug Pages
@@ -84,23 +80,4 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ${{ env.PROJECT_RELEASE_PATH }}
-
-    # Issue: Double zip: https://github.com/actions/upload-artifact/issues/39
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ env.PROJECT_RELEASE_PATH }}.zip
-        path: ./${{ env.PROJECT_RELEASE_PATH }}.zip
-
-    # Alternative: https://github.com/marketplace/actions/gh-release
-    - name: Upload Artifact to Release
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ github.event.release.upload_url }}
-        asset_name: ${{ env.PROJECT_RELEASE_PATH }}.zip
-        asset_path: ./${{ env.PROJECT_RELEASE_PATH }}.zip
-        asset_content_type: application/zip
-      if: github.event_name == 'release' && github.event.action == 'published'
       
