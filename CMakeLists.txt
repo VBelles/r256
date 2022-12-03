@@ -25,11 +25,14 @@ target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 
 # Web Configurations
 if (${PLATFORM} STREQUAL "Web")
-    set(EMCC_LINKER_FLAGS "--preload-file resources")
+    set(EMCC_LINKER_FLAGS "--preload-file resources --shell-file minshell.html")
 
     # Tell Emscripten to build an example.html file.
     set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
-
+else()
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                    COMMAND ${CMAKE_COMMAND} -E copy_directory
+                        ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
 endif()
 
 # Checks if OSX and links appropriate frameworks (Only required on MacOS)
