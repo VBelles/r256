@@ -15,7 +15,7 @@ jobs:
     
     env:
       PROJECT_NAME: ${{ github.event.repository.name }}
-      PROJECT_BUILD_PATH: ${{ github.event.repository.name }}/build
+      PROJECT_BUILD_PATH: ${{ github.event.repository.name }}\build
       PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_wasm
       
     steps:
@@ -51,16 +51,16 @@ jobs:
   
     - name: Generate Artifacts
       run: |
-        dir ${{ env.PROJECT_BUILD_PATH }}
         copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.data ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.data
-        dir ${{ env.PROJECT_RELEASE_PATH }}
-      shell: cmd
+        copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.wasm ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.wasm
+        copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.js ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.js
+        copy /Y ${{ env.PROJECT_BUILD_PATH }}\minshell.html ${{ env.PROJECT_RELEASE_PATH }}\index.html
 
     - name: Upload Artifacts to Githug Pages
       uses: actions/upload-artifact@v3
       with:
         name: github-pages
-        path: ${{ env.PROJECT_RELEASE_PATH }}
+        path: ${{ env.PROJECT_BUILD_PATH }}
         
     - name: Deploy to githug pages
       uses: peaceiris/actions-gh-pages@v3
