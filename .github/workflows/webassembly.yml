@@ -49,6 +49,13 @@ jobs:
         emcmake cmake .. -DPLATFORM=Web -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS="-s USE_GLFW=3" -DCMAKE_EXECUTABLE_SUFFIX=".html"
         emmake make
   
+    - name: Generate Artifacts
+      run: |
+        dir ${{ env.PROJECT_BUILD_PATH }}
+        copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.data ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.data
+        dir ${{ env.PROJECT_RELEASE_PATH }}
+      shell: cmd
+
     - name: Upload Artifacts to Githug Pages
       uses: actions/upload-artifact@v3
       with:
