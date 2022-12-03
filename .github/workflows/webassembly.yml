@@ -17,7 +17,6 @@ jobs:
       PROJECT_NAME: ${{ github.event.repository.name }}
       PROJECT_BUILD_PATH: ${{ github.event.repository.name }}/build
       PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_wasm
-      PROJECT_SOURCES: ${{ github.event.repository.name }}/src
       
     steps:
     - name: Checkout this repo
@@ -36,35 +35,26 @@ jobs:
       with:
         version: 3.1.26
         actions-cache-folder: 'emsdk-cache'
-        
-    - name: Setup Release Paths
-      run: |
-        echo "PROJECT_RELEASE_PATH=${{ env.PROJECT_NAME }}_v${{ github.event.release.tag_name }}_wasm" >> $GITHUB_ENV
-      shell: bash
-      if: github.event_name == 'release' && github.event.action == 'published'
+
     
     - name: Setup Environment
       run: | 
         mkdir ${{ env.PROJECT_RELEASE_PATH }}
+        mkdir ${{ env.PROJECT_BUILD_PATH }}
         dir
    
     - name: Build Product
       run: |
-        cd ${{ env.PROJECT_NAME }}
-        mkdir build
-        cd build
+        cd ${{ env.PROJECT_BUILD_PATH }}
         emcmake cmake .. -DPLATFORM=Web -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXE_LINKER_FLAGS="-s USE_GLFW=3" -DCMAKE_EXECUTABLE_SUFFIX=".html"
         emmake make
   
     - name: Generate Artifacts
       run: |
-        dir ${{ env.PROJECT_BUILD_PATH }}
-        copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.data ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.data
-        copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.wasm ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.wasm
-        copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.js ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.js
-        copy /Y ${{ env.PROJECT_BUILD_PATH }}\minshell.html ${{ env.PROJECT_RELEASE_PATH }}\index.html
-        copy /Y ${{ env.PROJECT_NAME }}\README.md ${{ env.PROJECT_RELEASE_PATH }}\README.md
-        copy /Y ${{ env.PROJECT_NAME }}\LICENSE ${{ env.PROJECT_RELEASE_PATH }}\LICENSE
+        copy /Y ${{ env.PROJECT_BUILD_PATH }}/${{ env.PROJECT_NAME }}.data ${{ env.PROJECT_RELEASE_PATH }}/${{ env.PROJECT_NAME }}.data
+        copy /Y ${{ env.PROJECT_BUILD_PATH }}/${{ env.PROJECT_NAME }}.wasm ${{ env.PROJECT_RELEASE_PATH }}/${{ env.PROJECT_NAME }}.wasm
+        copy /Y ${{ env.PROJECT_BUILD_PATH }}/${{ env.PROJECT_NAME }}.js ${{ env.PROJECT_RELEASE_PATH }}/${{ env.PROJECT_NAME }}.js
+        copy /Y ${{ env.PROJECT_BUILD_PATH }}/minshell.html ${{ env.PROJECT_RELEASE_PATH }}/index.html
         dir ${{ env.PROJECT_RELEASE_PATH }}
       shell: cmd
 

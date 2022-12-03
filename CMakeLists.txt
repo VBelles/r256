@@ -25,7 +25,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
 
 # Web Configurations
 if (${PLATFORM} STREQUAL "Web")
-    set(EMCC_LINKER_FLAGS "--preload-file resources --shell-file minshell.html")
+    set(EMCC_LINKER_FLAGS "--preload-file resources")
+    set(EMCC_LINKER_FLAGS "--shell-file minshell.html")
 
     # Tell Emscripten to build an example.html file.
     set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
