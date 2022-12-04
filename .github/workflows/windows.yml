@@ -24,13 +24,6 @@ jobs:
       uses: actions/checkout@master
       with:
         path: ${{ env.PROJECT_NAME }}
-      
-    - name: Checkout raylib repo
-      uses: actions/checkout@v3
-      with:
-        repository: raysan5/raylib
-        path: raylib
-        
 
     - name: Setup Environment
       run: | 
@@ -39,15 +32,11 @@ jobs:
         dir
       shell: cmd
 
-    # Setup MSBuild.exe path if required
-    - name: Setup MSBuild path
-      uses: microsoft/setup-msbuild@v1.1
-
-    - name: Build raylib Library + Product (VS2022 solution)
+    - name: Build Product
       run: |
         dir
         cd ${{ env.PROJECT_BUILD_PATH }}
-        cmake -G "MinGW Makefiles" -DCMAKE_BUILD_TYPE=Release ..
+        cmake -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release ..
         cmake --build .
         cd ..
       shell: cmd
@@ -57,6 +46,7 @@ jobs:
         dir ${{ env.PROJECT_BUILD_PATH }}
         copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.exe ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.exe
         copy /Y ${{ env.PROJECT_NAME }}\README.md ${{ env.PROJECT_RELEASE_PATH }}\README.md
+        copy /Y ${{ env.PROJECT_NAME }}\resources ${{ env.PROJECT_RELEASE_PATH }}\resources
         copy /Y ${{ env.PROJECT_NAME }}\LICENSE ${{ env.PROJECT_RELEASE_PATH }}\LICENSE
         dir ${{ env.PROJECT_RELEASE_PATH }}
       shell: cmd
