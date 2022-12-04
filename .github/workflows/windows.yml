@@ -42,9 +42,9 @@ jobs:
     - name: Generate Artifacts
       run: |
         dir ${{ env.PROJECT_BUILD_PATH }}
-        copy /Y ${{ env.PROJECT_BUILD_PATH }}\${{ env.PROJECT_NAME }}.exe ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.exe
+        copy /Y ${{ env.PROJECT_BUILD_PATH }}\Release\${{ env.PROJECT_NAME }}.exe ${{ env.PROJECT_RELEASE_PATH }}\${{ env.PROJECT_NAME }}.exe
         copy /Y ${{ env.PROJECT_NAME }}\README.md ${{ env.PROJECT_RELEASE_PATH }}\README.md
-        xcopy /Y ${{ env.PROJECT_NAME }}\resources ${{ env.PROJECT_RELEASE_PATH }}\resources /e
+        Xcopy /E /I ${{ env.PROJECT_NAME }}\resources ${{ env.PROJECT_RELEASE_PATH }}\resources
         copy /Y ${{ env.PROJECT_NAME }}\LICENSE ${{ env.PROJECT_RELEASE_PATH }}\LICENSE
         dir ${{ env.PROJECT_RELEASE_PATH }}
       shell: cmd
