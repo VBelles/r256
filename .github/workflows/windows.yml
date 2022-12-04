@@ -16,7 +16,7 @@ jobs:
 
     env:
       PROJECT_NAME: ${{ github.event.repository.name }}
-      PROJECT_BUILD_PATH: "${{ github.event.repository.name }}\build"
+      PROJECT_BUILD_PATH: ${{ github.event.repository.name }}\build
       PROJECT_RELEASE_PATH: ${{ github.event.repository.name }}_dev_win_x64
 
     steps:
