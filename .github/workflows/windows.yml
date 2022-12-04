@@ -35,10 +35,8 @@ jobs:
     - name: Build Product
       run: |
         dir
-        cd ${{ env.PROJECT_BUILD_PATH }}
-        cmake -DCMAKE_BUILD_TYPE=Release ..
-        cmake --build .
-        cd ..
+        cmake -Sc: ${{ env.PROJECT_NAME }} -Bc:${{ env.PROJECT_BUILD_PATH }} -DCMAKE_BUILD_TYPE=Release -G "Visual Studio 2022"
+        cmake --build ${{ env.PROJECT_BUILD_PATH }} --config Release --
       shell: cmd
 
     - name: Generate Artifacts
