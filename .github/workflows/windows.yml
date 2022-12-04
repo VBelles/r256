@@ -36,7 +36,7 @@ jobs:
       run: |
         dir
         cd ${{ env.PROJECT_BUILD_PATH }}
-        cmake -G "Visual Studio 16 2019" -DCMAKE_BUILD_TYPE=Release ..
+        cmake ..
         cmake --build .
         cd ..
       shell: cmd
