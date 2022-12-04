@@ -4,7 +4,6 @@
 # Object files
 *.o
 *.ko
-*.obj
 *.elf
 
 # Linker output
@@ -61,3 +60,5 @@ dkms.conf
 
 # Build folder
 [Bb]uild
+build-web
+out

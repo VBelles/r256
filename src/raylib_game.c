@@ -12,6 +12,7 @@
 ********************************************************************************************/
 
 #include "raylib.h"
+#include "hello.h"
 
 #if defined(PLATFORM_WEB)
 #define CUSTOM_MODAL_DIALOGS            // Force custom modal dialogs usage
@@ -120,6 +121,7 @@ void UpdateDrawFrame(void)
 	static Camera camera = { 0 };
 	static Vector3 cubePosition = { 0.0f, 0.0f, 0.0f };
 	static Vector2 cubeScreenPosition = { 0.0f, 0.0f };
+	static Texture2D texture;
 	if (!init) {
 		init = true;
 		camera.position = (Vector3){ 10.0f, 10.0f, 10.0f };
@@ -128,6 +130,7 @@ void UpdateDrawFrame(void)
 		camera.fovy = 45.0f;
 		camera.projection = CAMERA_PERSPECTIVE;
 		SetCameraMode(camera, CAMERA_FREE); // Set a free camera mode
+		texture = LoadTexture("resources/texture.png");
 	}
 
 	// Update
@@ -171,7 +174,7 @@ void UpdateDrawFrame(void)
 
 	BeginMode3D(camera);
 
-	DrawCube(cubePosition, 2.0f, 2.0f, 2.0f, RED);
+	DrawCubeTexture(texture, cubePosition, 2.0f, 2.0f, 2.0f, WHITE);
 	DrawCubeWires(cubePosition, 2.0f, 2.0f, 2.0f, MAROON);
 
 	DrawGrid(10, 1.0f);

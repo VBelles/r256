@@ -13,27 +13,24 @@ FetchContent_Declare(raylib GIT_REPOSITORY https://github.com/raysan5/raylib.git
 FetchContent_MakeAvailable(raylib)
 
 # Our Project
-file(GLOB_RECURSE PROJECT_SOURCES CONFIGURE_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/src/*.c") # Define PROJECT_SOURCES as a list of all source files
-set(PROJECT_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/src/") # Define PROJECT_INCLUDE to be the path to the include directory of the project
+include_directories(${PROJECT_SOURCE_DIR}/src)
+file(GLOB all_SRCS
+        "${PROJECT_SOURCE_DIR}/src/*.h"
+        "${PROJECT_SOURCE_DIR}/src/*.c"
+)
+add_executable(${PROJECT_NAME} ${all_SRCS})
 
-add_executable(${PROJECT_NAME})
-target_sources(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCES})
-target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_INCLUDE})
 target_link_libraries(${PROJECT_NAME} PRIVATE raylib)
-
-
 
 # Web Configurations
 if (${PLATFORM} STREQUAL "Web")
-    set(EMCC_LINKER_FLAGS "--preload-file resources")
-    set(EMCC_LINKER_FLAGS "--shell-file minshell.html")
-
-    # Tell Emscripten to build an example.html file.
+    file(INSTALL resources DESTINATION .)
     set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
+    set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "--preload-file resources --shell-file ../minshell.html")
 else()
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                    COMMAND ${CMAKE_COMMAND} -E copy_directory
-                        ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
+ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                            ${CMAKE_SOURCE_DIR}/resources $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
 endif()
 
 # Checks if OSX and links appropriate frameworks (Only required on MacOS)
